@@ -21,7 +21,5 @@ class Card:
         if self.rank == 14:
             return "A" + self.suit
         
-clubCodes = {"Clubs":"\u2663", "Hearts":"\u2665", "Diamonds":"\u2666", "Spades":"\u2660"}
+suitCodes = {"Clubs":"\u2663", "Hearts":"\u2665", "Diamonds":"\u2666", "Spades":"\u2660"}
 
-
-print(Card(13, clubCodes["Diamonds"]))

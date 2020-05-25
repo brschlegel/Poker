@@ -5,14 +5,16 @@ from Cards import Card
 class Hand:
     ##[hand rank, most important card, 2nd most important, ...]
    
-    def __init__(self, card):
+    def __init__(self):
         self.cardList = []
-        self.cardList.append(card)
+       
         self.details = [0,0,0,0,0,0]
     
     def Add(self,card):
            #handling extremes
-        if card.rank >= self.cardList[0].rank:
+        if len(self.cardList) == 0:
+            self.cardList.append(card)
+        elif card.rank >= self.cardList[0].rank:
             self.cardList.insert(0, card)
         
         elif card.rank <= self.cardList[len(self.cardList) - 1].rank:

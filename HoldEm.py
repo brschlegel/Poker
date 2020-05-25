@@ -23,17 +23,16 @@ def GenerateRandomDeck():
         deck.Add(fullList.pop(random.randrange(len(fullList))))
     return deck
 
-d = GenerateRandomDeck()
-h = Hand(d.Pop())
-
-for i in range(0,6):
-    h.Add(d.Pop())
 
 
 
 def EvalulateHand(hand):
-    
+    PairCheck(hand)
+    StraightCheck(hand)
+    FlushCheck(hand)
     return
+
+#region Check Methods
 
 def PairCheck(hand):
     
@@ -48,7 +47,7 @@ def PairCheck(hand):
             if hand.details[0] <= HandRank["Pair"] and hand.details[1] <  hand.cardList[i].rank:
                 hand.details[0] = HandRank["Pair"]
                 hand.details[1] = hand.cardList[i].rank
-               
+
    
 def ThreeKindCheck(hand, index):
   
@@ -144,25 +143,71 @@ def SuitCheck(cList, suit):
        
 def StraightCheck(hand):
     ## i equals highest card in straight
-    for i in range (0, len(hand.cardList) - 3):
-        count = 1
-    ##set stuff
+
+    cardSet = set()
+    for i in range(0, len(hand.cardList)):
+        cardSet.add(hand.cardList[i].rank)
+    
+    ##need 5 unique cards to make a straight
+    if len(cardSet) >= 5 and hand.details[0] <= HandRank["Straight"]:
+        
+        for i in range (0, len(hand.cardList) - 3):
+            count = 1
+
+            for k in range (1,5):
+                if (hand.cardList[i].rank - k) in cardSet:
+                    count += 1 
+                else:
+                    break
+            if count >= 5:
+                StraightFlushCheck(hand, hand.cardList[i:(i+5)], hand.cardList[i].suit)
+                if hand.details[0] <= HandRank["Straight"]:
+                    hand.details[0] = HandRank["Straight"]
+                    hand.details[1] = hand.cardList[i].rank
+                break
+        ##this is super ugly, but it does solve the whole ace case in 2 lines sooooo
+        if 5 in cardSet and 4 in cardSet and 3 in cardSet and 2 in cardSet and 14 in cardSet:
+            hand.details[0] = HandRank["Straight"]
+            hand.details[1] = 5
+        
+
+    
+        
+    
 
     return
 
-def StraightFlushCheck(hand, cList):
-    return
+def StraightFlushCheck(hand, cList, suit):
+    
+    count = 0
+    for i in range(0, len(cList)):
+        if(cList[i].suit == suit):
+           
+           count += 1
+    if count >= 5:
+        hand.details[0] = HandRank["Straight Flush"]
+        hand.details[1] = cList[0].rank
+        
+#endregion   
 
-g = Hand(Card(6, suitCodes["Clubs"]))
+d = GenerateRandomDeck()
+h = Hand()
+
+for i in range(0,7):
+    h.Add(d.Pop())
+
+
+g = Hand()
+g.Add(Card(6, suitCodes["Hearts"]))
 g.Add(Card(5, suitCodes["Hearts"]))
 g.Add(Card(4, suitCodes["Hearts"]))
-g.Add(Card(3, suitCodes["Hearts"]))
+g.Add(Card(7, suitCodes["Hearts"]))
 g.Add(Card(2, suitCodes["Hearts"]))
-g.Add(Card(4, suitCodes["Hearts"]))
+g.Add(Card(3, suitCodes["Hearts"]))
 
 
 g.Print()
-FlushCheck(g)
+EvalulateHand(g)
 print("bruh")
 for i in range(0, len(g.details)):
     print(g.details[i])

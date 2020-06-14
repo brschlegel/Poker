@@ -1,6 +1,7 @@
 from Decks import *
 from Cards import Card, suitCodes
 from Hands import *
+from Player import Player
 
 HandRank = {"Pair": 1, "Two Pair": 2, "Three Kind": 3, "Straight": 4, "Flush": 5, "Full House": 6, "Four Kind": 7, "Straight Flush": 8}
 
@@ -62,7 +63,7 @@ def ThreeKindCheck(hand, index):
         if hand.details[0] <= HandRank["Three Kind"]:
             hand.details[0] = HandRank["Three Kind"]
             ##if theres a three of a kind, and its higher than the previous one
-            if hand.details[1] <  hand.cardList[i].rank:
+            if hand.details[1] <  hand.cardList[index].rank:
                 hand.details[1] =  hand.cardList[index].rank
         
         if hand.details[0] <= HandRank["Full House"]:
@@ -190,24 +191,77 @@ def StraightFlushCheck(hand, cList, suit):
         
 #endregion   
 
+def CompareHandsR(players, depth):
+    ##if hands are identical
+    if depth > 5:
+        return players
+    winners = []
+    
+    max = 0
+    for i in range(len(players)):
+
+        if players[i].hand.details[depth] == max:
+            winners.append(players[i])
+            
+
+        if players[i].hand.details[depth] > max:
+            max = players[i].hand.details[depth]
+            winners = []
+            winners.append(players[i])
+            
+       
+      
+
+    if(len(winners) > 1):
+      
+        return CompareHandsR(winners, depth + 1)
+    else:
+        return winners
+
+def CompareHands(players):
+    return CompareHandsR(players, 0)
+
+
 d = GenerateRandomDeck()
 h = Hand()
 
-for i in range(0,7):
-    h.Add(d.Pop())
+
 
 
 g = Hand()
 g.Add(Card(6, suitCodes["Hearts"]))
 g.Add(Card(5, suitCodes["Hearts"]))
-g.Add(Card(4, suitCodes["Hearts"]))
-g.Add(Card(7, suitCodes["Hearts"]))
+g.Add(Card(5, suitCodes["Hearts"]))
+g.Add(Card(5, suitCodes["Diamonds"]))
 g.Add(Card(2, suitCodes["Hearts"]))
-g.Add(Card(3, suitCodes["Hearts"]))
+g.Add(Card(3, suitCodes["Clubs"]))
+p1 = Player()
+p1.hand = g
 
+h.Add(Card(6, suitCodes["Hearts"]))
+h.Add(Card(5, suitCodes["Clubs"]))
+h.Add(Card(5, suitCodes["Hearts"]))
+h.Add(Card(7, suitCodes["Clubs"]))
+h.Add(Card(14, suitCodes["Hearts"]))
+h.Add(Card(3, suitCodes["Hearts"]))
+p2 = Player()
+p2.hand = h
 
-g.Print()
-EvalulateHand(g)
-print("bruh")
-for i in range(0, len(g.details)):
-    print(g.details[i])
+v = Hand()
+v.Add(Card(6, suitCodes["Hearts"]))
+v.Add(Card(5, suitCodes["Clubs"]))
+v.Add(Card(5, suitCodes["Hearts"]))
+v.Add(Card(14, suitCodes["Clubs"]))
+v.Add(Card(14, suitCodes["Hearts"]))
+v.Add(Card(14, suitCodes["Hearts"]))
+p3 = Player()
+p3.hand = v
+
+EvalulateHand(p1.hand)
+EvalulateHand(p2.hand)
+EvalulateHand(p3.hand)
+
+players = [p1, p2, p3]
+l = CompareHands(players)
+for i in range(len(l)):
+    print(l[i].hand.details)

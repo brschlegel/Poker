@@ -22,6 +22,7 @@ def GenerateRandomDeck():
     deck = Deck()
     for i in range(0,52):
         deck.Add(fullList.pop(random.randrange(len(fullList))))
+
     return deck
 
 
@@ -199,31 +200,39 @@ def CompareHandsR(players, depth):
     
     max = 0
     for i in range(len(players)):
-
+       
         if players[i].hand.details[depth] == max:
             winners.append(players[i])
             
 
         if players[i].hand.details[depth] > max:
             max = players[i].hand.details[depth]
-            winners = []
+            winners.clear()
             winners.append(players[i])
-            
+        
        
       
 
     if(len(winners) > 1):
-      
+        
         return CompareHandsR(winners, depth + 1)
     else:
+        
         return winners
 
 def CompareHands(players):
+    for p in players:
+        EvalulateHand(p.hand)
+        print(p.hand.details)
+        for h in p.hand.cardList:
+            print(h)
     return CompareHandsR(players, 0)
 
 
 d = GenerateRandomDeck()
 h = Hand()
+
+
 
 
 

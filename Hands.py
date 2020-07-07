@@ -33,6 +33,7 @@ class Hand:
         if card.rank > self.cardList[targetIndex].rank: 
             if card.rank <= self.cardList[targetIndex - 1].rank:
                 self.cardList.insert(targetIndex, card)
+                return
                 
             else:
                 self.AddR(card, start, targetIndex)
@@ -41,13 +42,14 @@ class Hand:
         if card.rank <= self.cardList[targetIndex].rank:
             if card.rank >= self.cardList[targetIndex + 1].rank:
                 self.cardList.insert(targetIndex + 1, card)
+                return
             else:  
                 self.AddR(card, targetIndex, end)
     
     def Print(self):
         for i in range(0, len(self.cardList)):
             print(self.cardList[i])
-
+    ##Depreciated
     def FindValue(self):
         result = 0
         for i in range(0, len(self.cardList)):

@@ -36,7 +36,7 @@ class Game:
           card = deck.Pop()
           current.cards.append(card)
 
-      def PlayRound(self, dealer):
+      def PlayRound(self):
         pot = 0
         self.ResetLinkedList()
        
@@ -74,7 +74,8 @@ class Game:
           print(w.name + " won " + str(pot / len(winners)) + " chips!" )
           w.chips += pot / len(winners)
         
-
+        self.dealer = self.dealerPerm.rightPermenant
+        self.dealerPerm = self.dealer
         return
       # flop turn and river :)
       def Flurver(self, deck, num):
@@ -168,5 +169,6 @@ class Game:
 
 
 g=Game(3, 0, 3)
+while(True):
 
-g.PlayRound(0)
+  g.PlayRound()
